@@ -163,7 +163,9 @@ function dotenv_parse_bytes(bytes source) -> DotenvResult {
 
         string value := "";
         bool value_valid := true;
+        bool quoted_value := false;
         if (cursor < line_end && source[cursor] == 39) {
+            quoted_value = true;
             int_64 quote_column := cursor - line_start + 1;
             cursor++;
             int_64 value_start := cursor;
@@ -183,6 +185,7 @@ function dotenv_parse_bytes(bytes source) -> DotenvResult {
                 cursor++;
             }
         } else if (cursor < line_end && source[cursor] == 34) {
+            quoted_value = true;
             int_64 quote_column := cursor - line_start + 1;
             cursor++;
             bytes decoded := bytes(line_end - cursor);
@@ -266,10 +269,12 @@ function dotenv_parse_bytes(bytes source) -> DotenvResult {
         }
 
         if (value_valid && cursor < line_end) {
+            bool had_space := false;
             while (cursor < line_end && dotenv_internal_space(source[cursor])) {
+                had_space = true;
                 cursor++;
             }
-            if (cursor < line_end && source[cursor] != 35) {
+            if (cursor < line_end && (source[cursor] != 35 || (quoted_value && !had_space))) {
                 diagnostics.push(dotenv_internal_diagnostic(
                 "trailing_content",
                 "unexpected content after quoted value",

@@ -9,9 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "tests" / "package_test.p").read_text()
 EXPECTED = (
-    "1\n7\n8\none\ntwo # still\ntab\tquote\"slash\\\n1\nlast\nok\ncafé\n"
+    "1\n7\n8\none\ntwo # still\ntab\tquote\"slash\\\n1\nlast\nok\ncafé\nfirst\nlast\n"
     "0\n3\ninvalid_key_start\n1\n1\nmissing_equals\n2\n7\n"
-    "unterminated_double_quote\n3\n3\n1\n1000\n"
+    "unterminated_double_quote\n3\n3\n0\ntrailing_content\n1\nfour\n"
+    "1\n2\ntwo\n0\ninvalid_escape\nunterminated_single_quote\n0\nnul_byte\n1\n1000\n"
 )
 
 
