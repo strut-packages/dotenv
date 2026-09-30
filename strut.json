@@ -1,0 +1,9 @@
+{
+  "name": "dotenv",
+  "version": "0.1.0",
+  "entry": "dotenv.h",
+  "description": "Deterministic dotenv parsing for Strut.",
+  "license": "MIT",
+  "repository": "https://github.com/strut-packages/dotenv",
+  "dependencies": {}
+}
