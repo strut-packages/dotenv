@@ -5,9 +5,9 @@ Official deterministic dotenv parser for Strut.
 ## API
 
 ```strut
-function dotenv_parse(string source) -> DotenvResult;
-function dotenv_parse_bytes(bytes source) -> DotenvResult;
-function dotenv_read(string path) -> DotenvResult : FilesystemError;
+result := dotenv.parse(source);
+result := dotenv.parse_bytes(source_bytes);
+result := dotenv.read(path);
 ```
 
 `DotenvResult` contains `valid`, a last-value-wins `values` map, source-ordered `entries`, and structured `diagnostics` with stable codes and 1-based byte positions.
@@ -18,7 +18,7 @@ function dotenv_read(string path) -> DotenvResult : FilesystemError;
 include <dotenv>;
 
 function main() -> int : FilesystemError {
-    DotenvResult result := dotenv_read(".env");
+    DotenvResult result := dotenv.read(".env");
     if (!result.valid) {
         return 1;
     }

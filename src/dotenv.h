@@ -60,7 +60,7 @@ int_64 column
     };
 }
 
-function dotenv_parse_bytes(bytes source) -> DotenvResult {
+function dotenv_internal_parse_bytes(bytes source) -> DotenvResult {
     map<string,string> values;
     DotenvEntry[] entries := [];
     DotenvDiagnostic[] diagnostics := [];
@@ -301,10 +301,24 @@ function dotenv_parse_bytes(bytes source) -> DotenvResult {
     };
 }
 
-function dotenv_parse(string source) -> DotenvResult {
-    return dotenv_parse_bytes(bytes.from_string(source));
+function dotenv_internal_parse(string source) -> DotenvResult {
+    return dotenv_internal_parse_bytes(bytes.from_string(source));
 }
 
-function dotenv_read(string path) -> DotenvResult : FilesystemError {
-    return dotenv_parse_bytes(read_bytes(path));
+function dotenv_internal_read(string path) -> DotenvResult : FilesystemError {
+    return dotenv_internal_parse_bytes(read_bytes(path));
 }
+
+struct DotenvFacade {
+    function parse(string source) -> DotenvResult;
+    function parse_bytes(bytes source) -> DotenvResult;
+    function read(string path) -> DotenvResult : FilesystemError;
+}
+
+function DotenvFacade::parse(string source) -> DotenvResult { return dotenv_internal_parse(source); }
+function DotenvFacade::parse_bytes(bytes source) -> DotenvResult { return dotenv_internal_parse_bytes(source); }
+function DotenvFacade::read(string path) -> DotenvResult : FilesystemError { return dotenv_internal_read(path); }
+
+function dotenv_internal_facade() -> DotenvFacade { return DotenvFacade {}; }
+
+DotenvFacade dotenv := dotenv_internal_facade();
